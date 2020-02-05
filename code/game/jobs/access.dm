@@ -42,7 +42,7 @@
 				n = text2num(i)
 				if(n) req_one_access += n
 
-	if(!islist(req_access)) return 1//something's very wrong
+	if(!is_list(req_access)) return 1//something's very wrong
 	var/L[] = req_access
 	if(!L.len && (!req_one_access || !req_one_access.len)) return 1//no requirements
 	if(!I) return
@@ -59,9 +59,9 @@
 
 /obj/proc/check_access_list(L[])
 	if(!req_access  && !req_one_access)	return 1
-	if(!islist(req_access)) return 1
+	if(!is_list(req_access)) return 1
 	if(!req_access.len && (!req_one_access || !req_one_access.len))	return 1
-	if(!islist(L))	return
+	if(!is_list(L))	return
 	var/i
 	for(i in req_access)
 		if(!(i in L)) return //doesn't have this access

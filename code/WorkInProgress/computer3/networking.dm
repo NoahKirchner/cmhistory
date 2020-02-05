@@ -18,7 +18,7 @@
 		if(!result)
 			return null
 
-		if(islist(result))
+		if(is_list(result))
 			var/list/R = result
 			if(R.len == 0)
 				return null

@@ -50,7 +50,7 @@
 		affected.status |= LIMB_BLEEDING
 
 	affected.createwound(CUT, 1)
-	affected.clamp() //Hemostat function, clamp bleeders
+	affected.clamp_limb() //Hemostat function, clamp_limb bleeders
 	affected.surgery_open_stage = 2 //Can immediately proceed to other surgery steps
 	target.updatehealth()
 
@@ -92,7 +92,7 @@
 		affected.status |= LIMB_BLEEDING
 
 	affected.createwound(CUT, 1)
-	affected.clamp() //Hemostat function, clamp bleeders
+	affected.clamp_limb() //Hemostat function, clamp_limb bleeders
 	//spread_germs_to_organ(affected, user) //I don't see the reason for infection with a clean laser incision, when scalpel or ICS is fine
 	affected.update_wounds()
 
@@ -166,8 +166,8 @@
 
 /datum/surgery_step/generic/clamp_bleeders/end_step(mob/living/user, mob/living/carbon/human/target, target_zone, obj/item/tool, datum/limb/affected)
 	user.visible_message("<span class='notice'>[user] clamps bleeders in [target]'s [affected.display_name] with \the [tool].</span>",	\
-	"<span class='notice'>You clamp bleeders in [target]'s [affected.display_name] with \the [tool].</span>")
-	affected.clamp()
+	"<span class='notice'>You clamp_limb bleeders in [target]'s [affected.display_name] with \the [tool].</span>")
+	affected.clamp_limb()
 	spread_germs_to_organ(affected, user)
 
 /datum/surgery_step/generic/clamp_bleeders/fail_step(mob/living/user, mob/living/carbon/human/target, target_zone, obj/item/tool, datum/limb/affected)

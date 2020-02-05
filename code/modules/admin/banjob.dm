@@ -66,7 +66,7 @@ var/jobban_keylist[0]		//to store the keys & ranks
 
 /proc/check_jobban_path(X)
 	. = ckey(X)
-	if(!islist(jobban_keylist[.])) //If it's not a list, we're in trouble.
+	if(!is_list(jobban_keylist[.])) //If it's not a list, we're in trouble.
 		jobban_keylist[.] = list()
 
 /proc/jobban_fullban(mob/M, rank, reason)
