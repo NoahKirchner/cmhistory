@@ -435,6 +435,57 @@
 		"/obj/item/ammo_magazine/sniper",
 		 )
 
+/obj/item/clothing/tie/storage/chemrig
+	name = "Chemical Rig"
+	desc = "A bulky rig containing a mount for an injector."
+	icon_state = "webbing"
+	slots = 1
+	var/obj/item/reagent_container/syringe/I
+
+/obj/item/clothing/tie/storage/chemrig/New()
+	..()
+	hold.can_hold = list(
+		"/obj/item/reagent_container/syringe",
+	)
+
+/obj/item/clothing/tie/storage/chemrig/verb/Inject()
+	set name = "Inject Chemicals"
+	set category = "Object"
+	var/turf/T = get_turf(usr)
+	var/obj/item/clothing/tie/storage/chemrig/C
+
+	if(usr.is_mob_incapacitated(TRUE)) //So you can't use it while in crit, etc
+		usr << "<span class = warning>You can't use the rig while incapacitated!</span>"
+	else
+		if (istype(src, /obj/item/clothing/under)) //Making sure the webbing is worn
+			var/obj/item/clothing/under/S = src
+			C=S.hastie //Uniform's hastie value is equal to its accessory, this makes sure C isn't checking the contents of the uniform, but instead the chemrig
+		else
+			usr << "<span class = warning>You must be wearing the rig for it to work!</span>"
+
+
+
+	for(var/obj/item/I in C.hold.contents)	//Cycles through items in chemrig's contents, right now there's only one slot but the for loop should make it able to be expanded
+		I.reagents.reaction(usr, INGEST)
+		I.reagents.trans_to(usr, 15)
+		C.hold.remove_from_storage(I, T)
+		usr << "<span class = warning>You feel a tiny prick and hear a needle dropping to the floor.</span>"
+	
+	if(C.hold.contents != /obj/item) //If no syringe in rig
+		usr << "<span class = warning>The rig is empty! Add in a syringe.</span>"
+
+
+
+/obj/item/clothing/tie/storage/chemrig/on_attached(obj/item/clothing/under/S, mob/user as mob)
+	..()
+	has_suit.verbs += /obj/item/clothing/tie/storage/chemrig/verb/Inject
+
+
+/obj/item/clothing/tie/storage/chemrig/on_removed(obj/item/clothing/under/S, mob/user as mob)
+	has_suit.verbs -= /obj/item/clothing/tie/storage/chemrig/verb/Inject
+	..()
+
+
 /obj/item/clothing/tie/storage/black_vest
 	name = "black webbing vest"
 	desc = "Robust black synthcotton vest with lots of pockets to hold whatever you need, but cannot hold in hands."

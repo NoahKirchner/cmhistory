@@ -54,7 +54,7 @@ var/global/datum/authority/branch/recycle/RecycleAuthority = new()
 		if(fetched) //This shouldn't happen, but the system is not optimized enough to eliminate the outlier cases...
 			fetched.ta_directive = null //Reset this, in case we need to dispose of it later, though it should still be recycled in most cases.
 
-			if(islist(directive)) 	fetched.New(arglist(directive))
+			if(is_list(directive)) 	fetched.New(arglist(directive))
 			else 					fetched.New(directive)
 			recycle_count++
 			#if DEBUG_RA_AUTHORITY
@@ -64,7 +64,7 @@ var/global/datum/authority/branch/recycle/RecycleAuthority = new()
 
 		else log_debug("RA: FetchFromShelf returned a null item: [fetch_type] and it was somehow deleted in the interim. Pulling from new instead.")
 
-	if(islist(directive)) 	. = new fetch_type(arglist(directive)) //Give us a an argument list.
+	if(is_list(directive)) 	. = new fetch_type(arglist(directive)) //Give us a an argument list.
 	else 					. = new fetch_type(directive) //Give us a loc.
 	#if DEBUG_RA_AUTHORITY
 	world << "<span class='debuginfo'>Had to create a new atom. Could not get from shelf.</span>"
@@ -97,7 +97,7 @@ so there's honestly not too much to do here.
 		#endif
 
 		for(i in gathered_variables[product.type])
-			if(islist(product.vars[i])) gathered_variables[product.type][i] = list() //We reset it to empty if it's a list.
+			if(is_list(product.vars[i])) gathered_variables[product.type][i] = list() //We reset it to empty if it's a list.
 			else gathered_variables[product.type][i] = initial(product.vars[i]) //Reset.
 		#if DEBUG_RA_AUTHORITY
 		world << "<span class='debuginfo'>Successfully reset [product.type].</span>"
@@ -105,7 +105,7 @@ so there's honestly not too much to do here.
 
 	//Time to reset its variables.
 	for(i in gathered_variables[product.type]) //We still need to empty lists here. Sigh. Better to just empty them on Dispose().
-		product.vars[i] = islist(product.vars[i]) ? list() : gathered_variables[product.type][i]
+		product.vars[i] = is_list(product.vars[i]) ? list() : gathered_variables[product.type][i]
 
 	recycling[product.type] += product //Adds it to the list.
 	product.ta_directive = TA_REVIVE_ME //It won't be collected and disposed of later.

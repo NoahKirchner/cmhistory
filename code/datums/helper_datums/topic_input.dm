@@ -57,4 +57,4 @@
 
 	proc/getList(i)
 		var/t = getAndLocate(i)
-		return islist(t) ? t : null
+		return is_list(t) ? t : null

@@ -50,7 +50,7 @@
 	if(istype(W, /obj/item/powerloader_clamp))
 		var/obj/item/powerloader_clamp/PC = W
 		if(PC.linked_powerloader == src)
-			unbuckle() //clicking the powerloader with its own clamp unbuckles the pilot.
+			unbuckle() //clicking the powerloader with its own clamp_limb unbuckles the pilot.
 			playsound(loc, 'sound/mecha/powerloader_unbuckle.ogg', 25)
 			return 1
 	. = ..()
@@ -72,7 +72,7 @@
 	else
 		move_delay = initial(move_delay)
 		icon_state = "powerloader_open"
-		M.drop_held_items() //drop the clamp when unbuckling
+		M.drop_held_items() //drop the clamp_limb when unbuckling
 
 /obj/vehicle/powerloader/buckle_mob(mob/M, mob/user)
 	if(M != user) return
@@ -113,7 +113,7 @@
 	icon_state = "loader_clamp"
 	force = 20
 	flags_item = ITEM_ABSTRACT //to prevent placing the item on a table/closet.
-								//We're controlling the clamp but the item isn't really in our hand.
+								//We're controlling the clamp_limb but the item isn't really in our hand.
 	var/obj/vehicle/powerloader/linked_powerloader
 	var/obj/loaded
 
@@ -121,13 +121,13 @@
 	if(linked_powerloader)
 		forceMove(linked_powerloader)
 		if(linked_powerloader.buckled_mob && linked_powerloader.buckled_mob == user)
-			linked_powerloader.unbuckle() //drop a clamp, you auto unbuckle from the powerloader.
+			linked_powerloader.unbuckle() //drop a clamp_limb, you auto unbuckle from the powerloader.
 	else cdel(src)
 
 
 /obj/item/powerloader_clamp/attack(mob/living/M, mob/living/user, def_zone)
 	if(M == linked_powerloader.buckled_mob)
-		unbuckle() //if the pilot clicks themself with the clamp, it unbuckles them.
+		unbuckle() //if the pilot clicks themself with the clamp_limb, it unbuckles them.
 		return 1
 	else
 		return ..()

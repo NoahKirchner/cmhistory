@@ -382,7 +382,7 @@
 				<li><b>Airtank volume:</b> 500 liters</li>
 				<li><b>Devices:</b>
 					<ul class="a">
-					<li>Hydraulic clamp</li>
+					<li>Hydraulic clamp_limb</li>
 					<li>High-speed drill</li>
 					</ul>
 				</li>
