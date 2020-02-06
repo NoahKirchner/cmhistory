@@ -80,7 +80,8 @@ var/list/admin_verbs_admin = list(
 	/client/proc/check_round_statistics,
 	/client/proc/award_medal,
 	/client/proc/force_shuttle,
-	/client/proc/remove_players_from_vic
+	/client/proc/remove_players_from_vic,
+
 )
 var/list/admin_verbs_ban = list(
 	/client/proc/unban_panel
@@ -944,3 +945,60 @@ var/list/admin_verbs_mentor = list(
 
 	log_admin("Admin [key_name_admin(usr)] set the away_timer of nearby clientless Xenos to 300.", 1)
 	message_admins("<b>[key_name(src)]</b> set the away_timer of nearby clientless Xenos to 300.", 1)
+
+/datum/verb/spawn_uscm_tech()
+	set name = "Spawn USCM Technician"
+	set desc = "Spawns and ckeys into a mob with max skills for debug purposes."
+	set category = "Debug"
+/*
+Spawns a human with max skills, max ID permissions and some useful equipment
+to make debugging/testing of new features easier. Will spawn on the tile that 
+your ghost is observing.
+*/
+
+	var/turf/T = get_turf(usr)
+	var/datum/mind/M = usr //Used later for keying into the mob.
+	var/mob/living/carbon/human/H = new(T)//Spawns new human at location of ghost
+	var/datum/effect_system/spark_spread/spark_system = new /datum/effect_system/spark_spread()//Spark system init
+
+	message_admins("[key_name(src)] Has spawned in as a USCM Tech at [T]", 1)
+	src << "<font size='3'>\red You have been spawned in as a USCM Technician. Go fix shit.</font>"
+//Just spawns sparks because I think it looks cool, doesn't serve any real purpose aside from aesthetics
+	spark_system = new /datum/effect_system/spark_spread
+	spark_system.set_up(5, 0, T)
+	spark_system.attach(src)
+	spark_system.start()	
+
+
+	H.real_name = capitalize("Technician")
+	H.name = H.real_name
+	H.age = 30
+	H.dna.ready_dna(H)
+	H.key = M.key//Keys into the new human
+	if(H.client) H.client.change_view(world.view)
+	H.mind.cm_skills = null //All skills woot woot
+	H.equip_to_slot_or_del(new /obj/item/clothing/under/marine(H), WEAR_BODY)
+	H.equip_to_slot_or_del(new /obj/item/clothing/suit/storage/marine(H), WEAR_JACKET)
+	H.equip_to_slot_or_del(new /obj/item/clothing/head/helmet/marine(H), WEAR_HEAD)
+	H.equip_to_slot_or_del(new /obj/item/storage/belt/utility/full(H), WEAR_WAIST)
+	H.equip_to_slot_or_del(new /obj/item/clothing/shoes/marine(H), WEAR_FEET)
+	H.equip_to_slot_or_del(new /obj/item/weapon/gun/rifle/m41a(H), WEAR_J_STORE)
+	H.equip_to_slot_or_del(new /obj/item/clothing/gloves/marine(H), WEAR_HANDS)
+	H.equip_to_slot_or_del(new /obj/item/storage/backpack/lightpack(H), WEAR_BACK)
+
+	H.equip_to_slot_or_del(new /obj/item/device/healthanalyzer(H.back), WEAR_IN_BACK)
+	H.equip_to_slot_or_del(new /obj/item/storage/firstaid/adv(H.back), WEAR_IN_BACK)
+	H.equip_to_slot_or_del(new /obj/item/storage/firstaid/fire(H.back), WEAR_IN_BACK)
+	H.equip_to_slot_or_del(new /obj/item/device/flashlight/flare(H.back), WEAR_IN_BACK)
+
+	var/obj/item/card/id/W = new(H)
+	W.icon_state = "centcom"
+	W.access = get_antagonist_pmc_access()//all access BAY-BEE, WOO!
+	W.assignment = "USCM Technician"
+	W.registered_name = H.real_name
+	W.paygrade = "O8"
+	W.name = "[H.real_name]'s ID Card ([W.assignment])"
+	H.equip_to_slot_or_del(W, WEAR_ID)
+
+
+

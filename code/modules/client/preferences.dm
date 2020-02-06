@@ -350,7 +350,7 @@ datum/preferences
 	dat += "<b>Custom Loadout:</b> "
 	var/total_cost = 0
 
-	if(!islist(gear)) gear = list()
+	if(!is_list(gear)) gear = list()
 
 	if(gear && gear.len)
 		dat += "<br>"
@@ -867,7 +867,7 @@ datum/preferences
 
 						var/total_cost = 0
 
-						if(isnull(gear) || !islist(gear)) gear = list()
+						if(isnull(gear) || !is_list(gear)) gear = list()
 
 						if(gear && gear.len)
 							for(var/gear_name in gear)

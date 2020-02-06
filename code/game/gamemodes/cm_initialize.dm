@@ -46,12 +46,12 @@ Additional game mode variables.
 	var/pred_keys[] = list() //People who are playing predators, we can later reference who was a predator during the round.
 
 	var/xeno_required_num 	= 0 //We need at least one. You can turn this off in case we don't care if we spawn or don't spawn xenos.
-	var/xeno_starting_num 	= 0 //To clamp starting xenos.
+	var/xeno_starting_num 	= 0 //To clamp_limb starting xenos.
 	var/xeno_bypass_timer 	= 0 //Bypass the five minute timer before respawning.
 	//var/xeno_queen_timer  	= list(0, 0, 0, 0, 0) //How long ago did the queen die?
 	var/xeno_queen_deaths 	= 0 //How many times the alien queen died.
-	var/surv_starting_num 	= 0 //To clamp starting survivors.
-	var/merc_starting_num 	= 0 //PMC clamp.
+	var/surv_starting_num 	= 0 //To clamp_limb starting survivors.
+	var/merc_starting_num 	= 0 //PMC clamp_limb.
 	var/marine_starting_num = 0 //number of players not in something special
 	var/pred_current_num 	= 0 //How many are there now?
 	var/pred_maximum_num 	= 4 //How many are possible per round? Does not count elders.

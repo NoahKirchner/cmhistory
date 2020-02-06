@@ -244,7 +244,7 @@
 
 	//new_con = min(remain_con, new_con)
 
-	//clamp remaining concentration so we don't go into negatives
+	//clamp_limb remaining concentration so we don't go into negatives
 	remain_con = max(0, remain_con - new_con)
 
 	//distribute remaining concentration between unlocked ports evenly

@@ -18,7 +18,7 @@
 	icon = 'icons/Marine/marine-weapons.dmi'
 	icon_state = "sentry_case"
 	w_class = 5
-	storage_slots = 6
+	storage_slots = 7
 	can_hold = list() //Nada. Once you take the stuff out it doesn't fit back in.
 
 	New()
@@ -32,6 +32,7 @@
 			new /obj/item/device/turret_sensor(src)
 			new /obj/item/cell(src)
 			new /obj/item/ammo_magazine/sentry(src)
+			new /obj/item/turret_laptop(src)
 
 /obj/machinery/marine_turret_frame
 	name = "\improper UA 571-C turret frame"
@@ -993,7 +994,7 @@
 		return 1
 
 	return 0
-/*
+
 /obj/item/turret_laptop
 	name = "UA 571-C Turret Control Laptop"
 	desc = "A small device used for remotely controlling sentry turrets."
@@ -1001,11 +1002,15 @@
 	icon = 'icons/obj/machines/computer.dmi'
 	icon_state = "turret_off"
 	unacidable = 1
-	var/linked_turret = null
+	var/linked_turret_1 = null
+	var/linked_turret_2 = null
+	var/linked_turret_3 = null
+	var/linked_turret_4 = null
 	var/on = 0
 	var/mob/living/carbon/human/user = null
 	var/obj/machinery/camera/current = null
 
+/*
 	check_eye(var/mob/user as mob)
 		if (user.z == 0 || user.stat || ((get_dist(user, src) > 1 || user.blinded) && !istype(user, /mob/living/silicon))) //user can't see - not sure why canmove is here.
 			return null
@@ -1016,6 +1021,7 @@
 
 	attack_self(mob/living/user as mob)
 		if(!linked_turret)
+
 */
 /obj/machinery/marine_turret/premade
 	name = "UA-577 Gauss Turret"

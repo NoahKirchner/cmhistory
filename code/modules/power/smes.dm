@@ -141,7 +141,7 @@
 
 	var/excess = powernet.netexcess		// this was how much wasn't used on the network last ptick, minus any removed by other SMESes
 
-	excess = min(lastout, excess)				// clamp it to how much was actually output by this SMES last ptick
+	excess = min(lastout, excess)				// clamp_limb it to how much was actually output by this SMES last ptick
 
 	excess = min((capacity-charge)/SMESRATE, excess)	// for safety, also limit recharge by space capacity of SMES (shouldn't happen)
 
@@ -332,7 +332,7 @@
 				chargelevel = input_level_max
 			if("set")
 				chargelevel = input(usr, "Enter new input level (0-[input_level_max])", "SMES Input Power Control", chargelevel) as num
-		chargelevel = max(0, min(input_level_max, chargelevel))	// clamp to range
+		chargelevel = max(0, min(input_level_max, chargelevel))	// clamp_limb to range
 
 	else if( href_list["output"] )
 		switch( href_list["output"] )
@@ -342,7 +342,7 @@
 				output = output_level_max
 			if("set")
 				output = input(usr, "Enter new output level (0-[output_level_max])", "SMES Output Power Control", output) as num
-		output = max(0, min(output_level_max, output))	// clamp to range
+		output = max(0, min(output_level_max, output))	// clamp_limb to range
 
 	investigate_log("input/output; [chargelevel>output?"<font color='green'>":"<font color='red'>"][chargelevel]/[output]</font>|Output-mode: [online?"<font color='green'>on</font>":"<font color='red'>off</font>"]|Input-mode: [chargemode?"<font color='green'>auto</font>":"<font color='red'>off</font>"] by [usr.key]","singulo")
 
