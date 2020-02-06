@@ -171,3 +171,5 @@
 		user << "\blue No chemicals are attached."
 
 	user << "\blue [attached ? attached : "No one"] is attached."
+
+
