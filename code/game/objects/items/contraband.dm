@@ -49,7 +49,7 @@ Co-ca-i-na
 	split = 1
 
 /obj/item/cocaine/proc/Gather() //Returns coke to a pile.
-	name = "\improper cocaine"
+	name = "\improper pile of cocaine"
 	desc = "Cocaine, blow, powder, co-ca-in-a."	
 	icon_state = "cokepile"
 	split = 0
@@ -75,7 +75,7 @@ Co-ca-i-na
 			user.visible_message("[user] forms the line into a pile with the [W]", \
 			"You scoop up the line into a pile with the [W]")		
 	else
-		user << "<span class = 'warning'>You need to seperate this pile into lines first, use an ID card</span>"
+		user << "<span class = 'warning'>You need to seperate this pile into lines first, use something sharp.</span>"
 
 /obj/item/cocaine/attack_hand(mob/user as mob)
 	if(split==0) //If a pile
