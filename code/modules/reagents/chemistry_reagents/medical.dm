@@ -985,7 +985,7 @@
 		M.regenZ = 0
 		. = ..()
 
-/datum/reagent/hyperzine
+/datum/reagent/cocaine
 	name = "Cocaine"
 	id = "cocaine"
 	description = "Cocaine is an illicit stimulant normally used for recreational purposes."
@@ -999,7 +999,7 @@
 		. = ..()
 		if(!.) return
 
-		M.reagent_move_delay_modifier -= 0.05
+		M.reagent_move_delay_modifier -= 0.1
 		if(prob(10))
 			M.emote(pick("blink_r","shiver"))
 			if(ishuman(M))
