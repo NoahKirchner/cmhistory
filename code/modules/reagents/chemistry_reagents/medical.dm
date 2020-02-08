@@ -991,9 +991,9 @@
 	description = "Cocaine is an illicit stimulant normally used for recreational purposes."
 	reagent_state = LIQUID
 	color = "#C8A5DC" // rgb: 200, 165, 220
-	custom_metabolism = 0.5
-	overdose = REAGENTS_OVERDOSE/10
-	overdose_critical = REAGENTS_OVERDOSE_CRITICAL/15
+	custom_metabolism = 0.2
+	overdose = 15
+	overdose_critical = 25
 
 	on_mob_life(mob/living/M)
 		. = ..()

@@ -15,6 +15,8 @@ var/global/list/randomized_pill_icons
 	w_class = 1
 	volume = 60
 	var/pill_desc = "An unknown pill." //the real description of the pill, shown when examined by a medically trained person
+	var/crushed = 0
+	var/split = null
 
 	New()
 		..()
@@ -87,6 +89,7 @@ var/global/list/randomized_pill_icons
 			return 1
 
 		return 0
+	
 
 	afterattack(obj/target, mob/user, proximity)
 		if(!proximity) return
@@ -110,6 +113,105 @@ var/global/list/randomized_pill_icons
 				cdel(src)
 
 		return
+
+/*
+Pill crushing & snorting, coca-ina style.
+*/
+
+/obj/item/reagent_container/pill/proc/Crush() //Crushes the pill, limits volume to 15u.
+	name = "powder"
+	desc = "An unknown fine powder."
+	icon_state = "cokepile"
+	crushed = 1
+	split = 0
+	volume = 15
+	var/negx
+	for(var/datum/reagent/X in src.reagents.reagent_list)//For each chemical contained by pill
+		negx = 15 - X.volume
+		X.volume += negx //Set volume to 15
+		X.volume = X.volume/src.reagents.reagent_list.len //Divide by total number of chems in list, to not go above 15
+
+
+/obj/item/reagent_container/pill/proc/Split() //Splits the pile to allow for use
+	name = "line of powder"
+	desc = "An unknown fine powder arranged into a line"
+	icon_state = "cokeline"
+	split = 1
+
+/obj/item/reagent_container/pill/proc/Gather() //Gathers the pile to allow for carrying
+	name = "powder"
+	desc = "An unknown fine powder."
+	icon_state = "cokepile"
+	split = 0	
+
+/obj/item/reagent_container/pill/proc/Mix(obj/item/reagent_container/pill/W as obj) //Mixes two powder piles together.
+	if(istype(W, /obj/item/reagent_container/pill) && W.crushed) //Making sure that only crushed pills can be mixed
+		src.reagents.reagent_list += W.reagents.reagent_list //Combines the reagent lists of both piles
+		var/negx 
+		for(var/datum/reagent/X in src.reagents.reagent_list) //For each chemical in the pile's reagent list
+			negx = 15 - X.volume
+			X.volume += negx //Set volume of X to 15
+			X.volume = X.volume/src.reagents.reagent_list.len //Divide X by total number of reagents to prevent > 15u total
+		W.Dispose() //Deletes one of the piles.
+		usr << "<span class = 'notice'> You mix the two powders together in equal parts.</span>"
+	else
+		usr << "How do you plan to mix those together, exactly?"
+
+
+/obj/item/reagent_container/pill/attackby(obj/item/W as obj, mob/user as mob) //Handles crushing, dividing and gathering.
+	if(crushed == 0) //Making sure it's not a pill
+		if(istype(W, /obj/item/weapon/combat_knife) || istype(W, /obj/item/weapon/throwing_knife)) //Sharp objects required to crush the pills.
+			Crush()
+			user.visible_message("[user] crushes up the pill with [W]", \
+			"You crush up the pill with [W]")
+			return
+		else
+			usr << "You're going to need something sharper to crush that pill."
+	if(crushed == 1) //Making sure it's a pill
+		if(istype(W, /obj/item/card/id) || istype(W, /obj/item/weapon/combat_knife/) || istype(W, /obj/item/weapon/throwing_knife/) || istype(W,/obj/item/spacecash/)) //Only items able of making lines.
+			if(split == 0) //If pile
+				Split()
+				user.visible_message("[user] forms the pile into a neat line with the [W]", \
+				"You carefully turn the pile into a line with the [W]")			
+			else //If line
+				Gather()
+				user.visible_message("[user] forms the line into a pile with the [W]", \
+				"You scoop up the line into a pile with the [W]")		
+
+		if(istype(W, /obj/item/reagent_container/pill)) //For mixing, proc contains the crushed check
+			Mix(W)
+
+	else
+		user << "<span class = 'warning'>You need to seperate this pile into lines first, use something sharp.</span>"
+
+/obj/item/reagent_container/pill/attack_hand(mob/user as mob)
+	if(crushed == 0) //If just a normal pill, act as normal.
+		..()
+	else if(split == 0) //If a pile, act as an item slash pill.
+		..()
+	else //If a line
+		var/turf/T = get_turf(src)
+		var/snortloc = T
+		if(T.contents) //If the turf the coke is on has any other objects on it.
+			for(var/contained in T.contents) //For every item in the turf's contents list
+				if(istype(contained, /mob/living/carbon/) || istype(contained, /obj/structure/table/)) //Allows you to snort off of mobs & tables
+					snortloc = contained //If a mob or table is on the tile the powder is on, that becomes what is snorted off of			
+		user.visible_message("[user] just railed [src] off of [snortloc], holy shit!", \
+		"You rail [src] off of [snortloc]! Holy shit!")
+		playsound(usr.loc, 'sound/effects/sniff1.ogg', 5, 1)//SNIFF EYUP
+		src.reagents.trans_to(usr, volume)//Transfers reagents from the container stored inside the powder to the usr
+		src.reagents.reaction(usr, INGEST)
+		Dispose() //Deletes coke post snort
+
+/obj/item/reagent_container/pill/Dispose()
+	. = ..()
+
+
+
+
+
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
 /// Pills. END
