@@ -263,17 +263,17 @@
 	damage_type = CUT
 
 /datum/wound/cut/gaping
-	max_bleeding_stage = 2
+	max_bleeding_stage = 5
 	stages = list("gaping wound" = 50, "large blood soaked clot" = 25, "large clot" = 15, "small angry scar" = 5, "small straight scar" = 0)
 	damage_type = CUT
 
 /datum/wound/cut/gaping_big
-	max_bleeding_stage = 2
+	max_bleeding_stage = 6
 	stages = list("big gaping wound" = 60, "healing gaping wound" = 40, "large angry scar" = 10, "large straight scar" = 0)
 	damage_type = CUT
 
 datum/wound/cut/massive
-	max_bleeding_stage = 2
+	max_bleeding_stage = 6
 	stages = list("massive wound" = 70, "massive healing wound" = 50, "massive angry scar" = 10,  "massive jagged scar" = 0)
 	damage_type = CUT
 
