@@ -999,12 +999,12 @@
 		. = ..()
 		if(!.) return
 
-		M.reagent_move_delay_modifier -= 0.1
-		if(prob(1))
+		M.reagent_move_delay_modifier -= 0.05
+		if(prob(10))
 			M.emote(pick("blink_r","shiver"))
 			if(ishuman(M))
 				M.emote(pick("blink_r","shiver"))
-			if(prob(5))
+			if(prob(1))
 				M << pick("You feel like the king of the world!", "You've got so much energy!", "Oh yeah, you could get used to this.")
 
 	on_overdose(mob/living/M)
@@ -1015,7 +1015,7 @@
 				E.damage += 0.1
 			if(prob(10))
 				M.emote(pick("twitch", "blink_r", "shiver"))
-			if(prob(10))
+			if(prob(1))
 				M << pick("<span class = 'warning'>You've got so much energy, maybe too much.</span>", "<span class = 'warning'>What if people know?</span>")
 
 	on_overdose_critical(mob/living/M)
@@ -1024,7 +1024,7 @@
 			var/datum/internal_organ/heart/E = H.internal_organs_by_name["heart"]
 			if(E)
 				E.damage += 4
-			if(prob(25))
-				M.emote(pick("twitch", "blink_r", "shiver", "twitches violently"))
 			if(prob(10))
+				M.emote(pick("twitch", "blink_r", "shiver"))
+			if(prob(1))
 				M << pick("<span class = 'warning'>You've got too much energy!</span>", "<span class = 'warning'>What if people know?</span>", "<span class = 'warning'>Your heart is beating out of its chest!</span>")
