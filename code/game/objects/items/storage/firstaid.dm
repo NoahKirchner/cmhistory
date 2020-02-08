@@ -138,6 +138,17 @@
 		new /obj/item/reagent_container/hypospray/autoinjector/Bicard(src)
 		new /obj/item/reagent_container/hypospray/autoinjector/Bicard(src)
 
+/obj/item/storage/firstaid/blood
+	name = "fluid administration kit"
+	desc = "Contains supplies for fluid resuscitation"
+
+	fill_firstaid_kit()
+		new /obj/item/iv_drip/mobile(src)
+		new /obj/item/reagent_container/blood/OMinus(src)
+		new /obj/item/reagent_container/blood/OMinus(src)
+		new /obj/item/reagent_container/blood/OMinus(src)
+		new /obj/item/reagent_container/blood/OMinus(src)
+		new /obj/item/reagent_container/blood/OMinus(src)
 
 	/*
  * Syringe Case
@@ -185,6 +196,11 @@
 		new /obj/item/reagent_container/syringe( src )
 		new /obj/item/reagent_container/glass/bottle/inaprovaline( src )
 		new /obj/item/reagent_container/glass/bottle/dexalin( src )
+
+
+
+
+
 
 /*
  * Pill Bottles

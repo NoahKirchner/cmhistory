@@ -171,3 +171,138 @@
 		user << "\blue No chemicals are attached."
 
 	user << "\blue [attached ? attached : "No one"] is attached."
+
+/obj/item/iv_drip/mobile
+	name = "\improper Fluid Resuscitation Kit"
+	desc = "An emergency fluid resuscitation implement containing an IV catheter and a blood bag recepticle."
+	icon = 'icons/obj/iv_drip.dmi'
+	icon_state = "mobile"
+	var/obj/machinery/iv_drip/mobile/internal/E
+
+
+/obj/item/iv_drip/mobile/New()
+	E = new /obj/machinery/iv_drip/mobile/internal(src)
+
+/obj/machinery/iv_drip/mobile/internal
+	attached = null
+	var/obj/item/reagent_container/blood = null
+	var/obj/item/iv_drip/mobile/I
+
+/obj/machinery/iv_drip/mobile/internal/New()
+	I = src.loc
+
+
+/obj/machinery/iv_drip/mobile/internal/proc/Install(W)
+	blood = W
+
+
+/obj/item/iv_drip/mobile/proc/update_mobile_icon()
+	if(E.attached)
+		icon_state = "mobile_hooked"
+	else
+		icon_state = "mobile"
+
+	overlays = null
+
+	if(E.blood)
+		var/datum/reagents/reagents = E.blood.reagents
+		if(reagents.total_volume)
+			var/image/filling = image('icons/obj/iv_drip.dmi', src, "reagent")
+
+			var/percent = round((reagents.total_volume / E.blood.volume) * 100)
+			switch(percent)
+				if(0 to 9)		filling.icon_state = "mreagent0"
+				if(10 to 24)	filling.icon_state = "mreagent10"
+				if(25 to 49)	filling.icon_state = "mreagent25"
+				if(50 to 74)	filling.icon_state = "mreagent50"
+				if(75 to 90)	filling.icon_state = "mreagent75"
+				if(91 to INFINITY)	filling.icon_state = "mreagent100"
+
+			filling.color = mix_color_from_reagents(reagents.reagent_list)
+			overlays += filling
+
+/obj/item/iv_drip/mobile/MouseDrop(over_object, src_location, over_location)
+	..()
+
+	if(ishuman(usr))
+		var/mob/living/carbon/human/H = usr
+		if(H.stat || get_dist(H, src) > 1 || H.lying)
+			return
+		
+		if(E.attached)
+			H.visible_message("[H] detaches \the [src] from \the [E.attached].", \
+			"You carefully detach \the [src] from \the [E.attached].")
+			E.attached = null
+			update_mobile_icon()
+			E.stop_processing()
+			return
+		
+		if(in_range(src, usr) && ishuman(over_object) && get_dist(over_object, src) <= 1)
+			H.visible_message("[H] sticks the catheter into \the [over_object] and raises the [src].", \
+			"You stick the catheter into \the [over_object] and raise the [src].")
+			E.attached = over_object
+			update_mobile_icon()
+			E.start_processing()
+
+/obj/item/iv_drip/mobile/attackby(obj/item/W, mob/living/user)
+	if(istype(W, /obj/item/reagent_container))
+		if(E.blood)
+			user << "<span class= 'warning'>There is already a blood bag loaded! Eject it before trying to install another</span>"
+			return
+
+		if(!istype(W,/obj/item/reagent_container/blood))
+			user << "<span class = 'warning'>That won't fit! Try a blood bag instead.</span>"
+			return
+
+		if(user.drop_inv_item_to_loc(W,src))
+			E.blood = W
+
+			var/reagentnames = ""
+			for(var/datum/reagent/R in E.blood.reagents.reagent_list)
+				reagentnames += ";[R.name]"
+
+
+			usr << "You install and secure \the [W] into \the [E]"
+			E.Install(W)
+			update_mobile_icon()
+		return
+	else
+		return ..()
+
+/obj/machinery/iv_drip/mobile/internal/process()
+	if(attached)
+
+		if(!(get_dist(src, src.attached) <= 1 && isturf(src.attached.loc)))
+			visible_message("The catheter is torn out of [src.attached], ouch!")
+			attached.apply_damage(5, BRUTE, pick("r_arm", "l_arm"))
+			attached = null
+			I.update_mobile_icon()
+			stop_processing()
+			return
+		
+	if(attached && blood)
+		if(blood.volume > 0)
+			var/transfer_amount = 4
+			attached.inject_blood(blood, transfer_amount)
+			I.update_mobile_icon()
+
+/obj/item/iv_drip/mobile/attack_self()
+	if(E.blood)
+		E.blood.loc = get_turf(src)
+		E.blood = null
+		E.attached = null
+		update_mobile_icon()
+	else
+		return ..()
+
+/obj/item/iv_drip/mobile/examine(mob/user)
+	..()
+	if(E.blood)
+		if(E.blood.reagents && E.blood.reagents.reagent_list.len)
+			user << "\blue Attached is \a [E.blood] with [E.blood.reagents.total_volume] units of blood."
+		else
+			user << "\blue Attached is an empty [E.blood]."
+	else
+		user << "\blue No blood bag is attached."
+
+	user << "\blue [E.attached ? E.attached : "No one"] is attached."
