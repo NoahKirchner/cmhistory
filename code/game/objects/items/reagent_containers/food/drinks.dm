@@ -295,15 +295,6 @@
 		reagents.add_reagent("water", 59)
 		reagents.add_reagent("hooch", 1)
 
-/obj/item/reagent_container/food/drinks/flask/marine/attack(atom/T as turf, mob/user as mob)
-	if(istype(T, /turf/open/beach/water) || istype(T,/turf/open/beach/water2))
-		if(get_dist(T, src) <= 1 || user.lying)
-			reagents.add_reagent("water", 50)
-			reagents.add_reagent("toxin,", 5)
-	else
-		..()
-
-
 /obj/item/reagent_container/food/drinks/flask/detflask
 	name = "detective's flask"
 	desc = "A metal flask with a leather band and golden badge belonging to the detective."

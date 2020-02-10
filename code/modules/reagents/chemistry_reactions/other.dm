@@ -439,3 +439,9 @@
 	required_reagents = list("toxin" = 1, "water" = 4)
 	result_amount = 5
 
+/datum/chemical_reaction/purification
+	name = "Water Purification"
+	id = "water"
+	result = "water"
+	required_reagents = list("rwater" = 5, "chlorine" = 1)
+	result_amount = 5
