@@ -492,3 +492,15 @@
 	color = "#8E18A9" // rgb: 142, 24, 169
 	toxpwr = 2
 	meltprob = 30
+
+/datum/reagent/toxin/riverwater
+	name = "River water"
+	id = "rwater"
+	description = "Some murky, disgusting river water."
+	reagent_state = LIQUID
+	color = "#006666" // rgb: 0, 102, 102
+	toxpwr = 0.7
+	custom_metabolism = 0.1
+
+	on_mob_life(mob/living/M,alien)
+		. = ..()

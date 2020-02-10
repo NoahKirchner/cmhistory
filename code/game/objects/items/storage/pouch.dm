@@ -428,3 +428,29 @@
 	new /obj/item/tool/wirecutters (src)
 	new /obj/item/device/multitool (src)
 	new /obj/item/tool/wrench (src)
+
+/obj/item/storage/pouch/bugout
+	name = "Bug-out Bag"
+	desc = "A small bag meant to contain basic survival gear."
+	icon = 'icons/Marine/marine-pouches.dmi'
+	icon_state = "bug_out"
+	w_class = 2 //Tiny since it doesn't carry much useful stuff.
+	max_w_class = 2
+	storage_slots = 5
+
+	can_hold = list(
+		"/obj/item/reagent_container/food/drinks/flask",
+		"/obj/item/reagent_container/pill/chlorine",
+		"/obj/item/weapon/combat_knife",
+		"/obj/item/storage/box/matches",
+		"/obj/item/storage/fancy/cigarettes",
+		"/obj/item/device/flashlight/flare",
+	)
+
+	New()
+		..()
+		new /obj/item/reagent_container/food/drinks/flask(src)
+		new /obj/item/reagent_container/pill/chlorine(src)
+		new /obj/item/weapon/combat_knife(src)
+		new /obj/item/storage/box/matches(src)
+		new /obj/item/device/flashlight/flare(src)

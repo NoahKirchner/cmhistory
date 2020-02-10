@@ -159,6 +159,115 @@
 	..()
 	overlays += image("icon"='icons/misc/beach.dmi',"icon_state"="water5","layer"=MOB_LAYER+0.1)
 
+//Water
+/turf/open/gm/liquid //This is just a parent, don't actually use it
+	name = "water"
+	icon_state = "water"
+	can_bloody = FALSE
+	var/watercont = 40
+	var/toxincont = 10
+
+/turf/open/gm/liquid/attackby(obj/W as obj, mob/user as mob)
+	if(istype(W, /obj/item/reagent_container/food/drinks/flask))
+		W.reagents.add_reagent("water", src.watercont)
+		W.reagents.add_reagent("rwater", src.toxincont)
+		user.visible_message("[user] collects some of [src] with [W]",\
+		"You collect some of [src] with [W]")
+	else
+		..()
+
+
+/turf/open/gm/liquid/legacy/water
+	icon = 'icons/misc/beach.dmi'
+	..()
+	New()
+		..()
+		overlays += image("icon"='icons/misc/beach.dmi',"icon_state"="water2","layer"=MOB_LAYER+0.1)
+		
+/turf/open/gm/liquid/legacy/water2
+	icon = 'icons/misc/beach.dmi'
+	..()
+	New()
+		..()
+		overlays += image("icon"='icons/misc/beach.dmi',"icon_state"="water5","layer"=MOB_LAYER+0.1)
+
+/turf/open/gm/liquid/river
+	name = "river water"
+	icon_state = "seashallow"
+	..()
+	New()
+		overlays += image("icon"='icons/turf/ground_map.dmi',"icon_state"="riverwater","layer"=MOB_LAYER+0.1)
+
+/turf/open/gm/liquid/river/Entered(atom/movable/AM)
+	..()
+	if(iscarbon(AM))
+		var/mob/living/carbon/C = AM
+		var/river_slowdown = 1.75
+
+		if(ishuman(C))
+			var/mob/living/carbon/human/H = AM
+			cleanup(H)
+			if(H.gloves && rand(0,100) < 60)
+				if(istype(H.gloves,/obj/item/clothing/gloves/yautja))
+					var/obj/item/clothing/gloves/yautja/Y = H.gloves
+					if(Y && istype(Y) && Y.cloaked)
+						H << "<span class='warning'> Your bracers hiss and spark as they short out!</span>"
+						Y.decloak(H)
+
+		else if(isXeno(C))
+			river_slowdown = 1.3
+			if(isXenoBoiler(C))
+				river_slowdown = -0.5
+
+		if(C.on_fire)
+			C.ExtinguishMob()
+
+		C.next_move_slowdown += river_slowdown
+
+/turf/open/gm/liquid/river/proc/cleanup(var/mob/living/carbon/human/M)
+	if(!M || !istype(M)) return
+
+	if(M.back)
+		if(M.back.clean_blood())
+			M.update_inv_back(0)
+	if(M.wear_suit)
+		if(M.wear_suit.clean_blood())
+			M.update_inv_wear_suit(0)
+	if(M.w_uniform)
+		if(M.w_uniform.clean_blood())
+			M.update_inv_w_uniform(0)
+	if(M.gloves)
+		if(M.gloves.clean_blood())
+			M.update_inv_gloves(0)
+	if(M.shoes)
+		if(M.shoes.clean_blood())
+			M.update_inv_shoes(0)
+	M.clean_blood()
+
+/turf/open/gm/liquid/river/poison
+	watercont = 5
+	toxincont = 50
+	..()
+	New()
+		overlays += image("icon"='icons/effects/effects.dmi',"icon_state"="greenglow","layer"=MOB_LAYER+0.1)
+
+	Entered(mob/living/M)
+		..()
+		if(istype(M)) M.apply_damage(55,TOX)
+
+/turf/open/gm/liquid/coast
+	name = "coastline water"
+	icon_state = "beach"
+
+/turf/open/gm/liquid/river/deep
+	..()
+	New()
+		..()
+		overlays += image("icon"='icons/turf/ground_map.dmi',"icon_state"="water","layer"=MOB_LAYER+0.1)
+
+
+
+
 
 
 
@@ -207,88 +316,6 @@
 /turf/open/gm/dirtgrassborder2
 	name = "grass"
 	icon_state = "grassdirt2_edge"
-
-
-/turf/open/gm/river
-	name = "river"
-	icon_state = "seashallow"
-	can_bloody = FALSE
-
-/turf/open/gm/river/New()
-	..()
-	overlays += image("icon"='icons/turf/ground_map.dmi',"icon_state"="riverwater","layer"=MOB_LAYER+0.1)
-
-
-/turf/open/gm/river/Entered(atom/movable/AM)
-	..()
-	if(iscarbon(AM))
-		var/mob/living/carbon/C = AM
-		var/river_slowdown = 1.75
-
-		if(ishuman(C))
-			var/mob/living/carbon/human/H = AM
-			cleanup(H)
-			if(H.gloves && rand(0,100) < 60)
-				if(istype(H.gloves,/obj/item/clothing/gloves/yautja))
-					var/obj/item/clothing/gloves/yautja/Y = H.gloves
-					if(Y && istype(Y) && Y.cloaked)
-						H << "<span class='warning'> Your bracers hiss and spark as they short out!</span>"
-						Y.decloak(H)
-
-		else if(isXeno(C))
-			river_slowdown = 1.3
-			if(isXenoBoiler(C))
-				river_slowdown = -0.5
-
-		if(C.on_fire)
-			C.ExtinguishMob()
-
-		C.next_move_slowdown += river_slowdown
-
-/turf/open/gm/river/proc/cleanup(var/mob/living/carbon/human/M)
-	if(!M || !istype(M)) return
-
-	if(M.back)
-		if(M.back.clean_blood())
-			M.update_inv_back(0)
-	if(M.wear_suit)
-		if(M.wear_suit.clean_blood())
-			M.update_inv_wear_suit(0)
-	if(M.w_uniform)
-		if(M.w_uniform.clean_blood())
-			M.update_inv_w_uniform(0)
-	if(M.gloves)
-		if(M.gloves.clean_blood())
-			M.update_inv_gloves(0)
-	if(M.shoes)
-		if(M.shoes.clean_blood())
-			M.update_inv_shoes(0)
-	M.clean_blood()
-
-
-/turf/open/gm/river/poison/New()
-	..()
-	overlays += image("icon"='icons/effects/effects.dmi',"icon_state"="greenglow","layer"=MOB_LAYER+0.1)
-
-/turf/open/gm/river/poison/Entered(mob/living/M)
-	..()
-	if(istype(M)) M.apply_damage(55,TOX)
-
-
-
-/turf/open/gm/coast
-	name = "coastline"
-	icon_state = "beach"
-
-/turf/open/gm/riverdeep
-	name = "river"
-	icon_state = "seadeep"
-	can_bloody = FALSE
-
-/turf/open/gm/riverdeep/New()
-	..()
-	overlays += image("icon"='icons/turf/ground_map.dmi',"icon_state"="water","layer"=MOB_LAYER+0.1)
-
 
 
 

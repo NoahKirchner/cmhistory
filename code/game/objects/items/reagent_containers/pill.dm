@@ -382,3 +382,11 @@ Pill crushing & snorting, coca-ina style.
 	..()
 	icon_state = randomized_pill_icons[21]
 	reagents.add_reagent("ultrazine", 5)
+
+/obj/item/reagent_container/pill/chlorine
+	name = "Water purification tablet"
+	pill desc = "A chlorine tablet used to purify water."
+	New()
+		..()
+		icon_state = "pill7"
+		reagents.add_reagent("chlorine", 2)
