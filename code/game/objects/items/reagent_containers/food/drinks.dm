@@ -295,6 +295,7 @@
 		reagents.add_reagent("water", 59)
 		reagents.add_reagent("hooch", 1)
 
+
 /obj/item/reagent_container/food/drinks/flask/detflask
 	name = "detective's flask"
 	desc = "A metal flask with a leather band and golden badge belonging to the detective."
