@@ -331,10 +331,10 @@
 /turf/open/gm/dirtgrassborder/is_weedable()
 	return FALSE
 
-/turf/open/gm/river/is_weedable()
+/turf/open/gm/liquid/river/is_weedable()
 	return FALSE
 
-/turf/open/gm/coast/is_weedable()
+/turf/open/gm/liquid/coast/is_weedable()
 	return FALSE
 
 /turf/open/snow/is_weedable()
@@ -365,7 +365,7 @@
 /turf/open/gm/can_dig_xeno_tunnel()
 	return TRUE
 
-/turf/open/gm/river/can_dig_xeno_tunnel()
+/turf/open/gm/liquid/river/can_dig_xeno_tunnel()
 	return FALSE
 
 /turf/open/snow/can_dig_xeno_tunnel()
